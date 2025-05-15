@@ -19,17 +19,18 @@ class ModelLoader {
             await this.renderModels();
             this.isLoaded = true; // 设置模型已加载标志
         } catch (error) {
-            this.showError('模型加载失败!');
+            this.showError('模型加载失败，请检查images目录');
             this.dispatchEvent(error);
         }
     }
 
     async renderModels() {
         return new Promise((resolve) => {
+            // 模拟模型加载延迟
             setTimeout(() => {
                 this.container.innerHTML = this.generateModelCards();
                 resolve();
-            }, 500);
+            }, 1000); // 增加延迟时间以模拟模型加载
         });
     }
 
@@ -49,7 +50,7 @@ class ModelLoader {
         this.container.addEventListener('click', (e) => {
             // 检查模型是否已被锁定
             if (this.isModelLocked) {
-                this.showToast('已选择模型,如需切换模型请刷新页面,但刷新页面后需要重启后端服务!');
+                this.showToast('模型已锁定，不能选择其他模型');
                 return;
             }
             
@@ -172,12 +173,62 @@ class ModelLoader {
     }
 }
 
+// 导入 DeviceManager 类
+class DeviceManager {
+    constructor() {
+        this.deviceContainer = document.getElementById('device');
+    }
+
+    init() {
+        this.renderDeviceGroups();
+    }
+
+    renderDeviceGroups() {
+        let html = `
+            <div class="device-groups">
+                <div class="device-group">
+                    <div class="group-header">
+                        <h3>Device</h3>
+                    </div>
+                    <div class="group-content">
+                        <div class="device-item">
+                            <div class="device-info">
+                                <span class="device-name">显卡</span>
+                                <select class="device-combo-box"></select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `;
+        this.deviceContainer.innerHTML = html;
+        this.renderComboBox();
+    }
+
+    renderComboBox() {
+        const comboBox = document.querySelector('.device-combo-box');
+        // 调用函数填充组合框内容
+        this.updateComboBox(comboBox, []);
+    }
+
+    updateComboBox(comboBox, items) {
+        comboBox.innerHTML = '';
+        items.forEach(item => {
+            const option = document.createElement('option');
+            option.value = item.value;
+            option.textContent = item.text;
+            comboBox.appendChild(option);
+        });
+    }
+}
+
 class NavigationController {
     constructor() {
         this.navItems = document.querySelectorAll('.nav-item');
         this.panels = document.querySelectorAll('.content-panel');
         this.errorContainer = document.getElementById('global-error');
         this.modelLoader = new ModelLoader();
+        this.deviceManager = new DeviceManager(); // 创建 DeviceManager 实例
         this.init();
     }
 
@@ -253,7 +304,7 @@ class NavigationController {
     }
 
     loadDeviceManagement() {
-        document.getElementById('device').innerHTML = '<p>设备管理面板内容</p>';
+        this.deviceManager.init(); // 初始化设备管理面板
     }
 
     loadParameterControls() {
