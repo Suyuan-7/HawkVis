@@ -1,0 +1,345 @@
+:root {
+    --accent-color: #6c63ff;
+    --dark-bg: #0a0a14;
+    --menu-height: 60px;
+    --text-bright: rgba(255, 255, 255, 0.95);
+    --card-bg: rgba(255, 255, 255, 0.03);
+    --toast-color: #333;
+}
+
+body {
+    min-height: 100vh;
+    background: var(--dark-bg);
+    color: var(--text-bright);
+    font-family: 'Segoe UI', system-ui;
+    overflow-x: hidden;
+}
+
+.nav-container {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    background: rgba(15, 15, 25, 0.95);
+    z-index: 1000;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+}
+
+.nav-menu {
+    display: flex;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+    height: var(--menu-height);
+    justify-content: space-around;
+    align-items: center;
+}
+
+.nav-item {
+    position: relative;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 8px;
+    cursor: pointer;
+    opacity: 0.7;
+    transition: opacity 0.3s ease;
+}
+
+.nav-item::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    width: 0;
+    height: 3px;
+    background: var(--accent-color);
+    transform: translateX(-50%);
+    transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.nav-item.active {
+    opacity: 1;
+}
+
+.nav-item.active::after {
+    width: 100%;
+}
+
+.nav-icon {
+    width: 24px;
+    height: 24px;
+    margin-bottom: 4px;
+    filter: invert(1) brightness(1.2);
+}
+
+.nav-text {
+    font-size: 12px;
+    white-space: nowrap;
+    color: var(--text-bright);
+    text-shadow: 0 0 8px rgba(108, 99, 255, 0.3);
+}
+
+.model-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    gap: 1rem;
+    padding: 2rem;
+    max-width: 1600px;
+    margin: 0 auto;
+}
+
+.model-card {
+    position: relative;
+    width: 128px;
+    height: 128px;
+    border-radius: 8px;
+    overflow: hidden;
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    cursor: pointer;
+    transform-origin: center center;
+}
+
+.model-card:hover {
+    transform: scale(1.1);
+}
+
+.model-card.selected {
+    transform: scale(1.1);
+}
+
+.model-content {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 4px 8px;
+    background: rgba(0, 0, 0, 0.5);
+    border-radius: 0 0 8px 8px;
+}
+
+.model-image-container {
+    position: relative;
+    width: 100%;
+    height: 100%;
+}
+
+.model-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border: none;
+    border-radius: 8px;
+    background: transparent;
+}
+
+.model-title {
+    font-size: 14px;
+    color: white;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin-top: 8px;
+}
+
+.chosen-icon {
+    width: 20px;
+    height: 20px;
+    display: none;
+    position: absolute;
+    bottom: 4px;
+    right: 4px;
+}
+
+.model-card.selected .chosen-icon {
+    display: block;
+}
+
+.loading-status {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: 4rem;
+}
+
+.spinner {
+    width: 48px;
+    height: 48px;
+    border: 4px solid rgba(255, 255, 255, 0.1);
+    border-top-color: var(--accent-color);
+    border-radius: 50%;
+    margin: 0 auto 1rem;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+.error-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.8);
+    display: none;
+    z-index: 9999;
+}
+
+.error-content {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: var(--dark-bg);
+    padding: 2rem;
+    border-radius: 16px;
+    text-align: center;
+    max-width: 400px;
+}
+
+.close-btn {
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid var(--accent-color);
+    color: var(--text-bright);
+    padding: 8px 20px;
+    border-radius: 24px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.close-btn:hover {
+    background: var(--accent-color);
+}
+
+.action-buttons {
+    margin-top: 1.5rem;
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+}
+
+.content-wrapper {
+    margin-top: var(--menu-height);
+    padding: 20px;
+}
+
+.content-panel {
+    display: none;
+}
+
+.content-panel.active {
+    display: block;
+}
+
+/* 选定模型按钮样式 */
+.model-select-button {
+    background-color: var(--accent-color);
+    color: white;
+    border: none;
+    padding: 0;
+    border-radius: 50%; /* 圆形按钮 */
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.3s;
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    z-index: 1001;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 70px;
+    height: 70px;
+}
+
+.model-select-button:hover {
+    background-color: rgba(248, 8, 248, 0.8);
+}
+
+.model-select-button:disabled {
+    background-color: rgba(108, 99, 255, 0.3);
+    cursor: not-allowed;
+}
+
+.model-icon {
+    width: 24px;
+    height: 24px;
+}
+
+.model-icon {
+    width: 64px;
+    height: 64px;
+    margin-right: 0;
+    position: absolute;
+    left: 3px;
+}
+
+.model-title {
+    font-size: 14px;
+    margin-left: 40px;
+}
+
+.toast {
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: var(--toast-color);
+    color: white;
+    padding: 10px 20px;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    visibility: hidden;
+    opacity: 0;
+    transition: visibility 0s linear 1s, opacity 0.3s;
+    z-index: 10000;
+}
+
+.toast.show {
+    visibility: visible;
+    opacity: 1;
+    transition-delay: 0s;
+}
+
+@media (max-width: 768px) {
+    .nav-menu {
+        padding: 0;
+        justify-content: space-between;
+    }
+    .nav-item {
+        flex: 0 1 25%;
+        padding: 12px;
+    }
+    .nav-text {
+        display: none;
+    }
+    .nav-icon {
+        width: 28px;
+        height: 28px;
+    }
+    .model-grid {
+        grid-template-columns: 1fr 1fr;
+        gap: 1rem;
+        padding: 1rem;
+    }
+    .model-image {
+        height: 96px;
+    }
+    .model-title {
+        padding: 2px 8px;
+        font-size: 12px;
+    }
+}
+
+@media (max-width: 480px) {
+    .model-grid {
+        grid-template-columns: 1fr;
+    }
+    .model-image {
+        height: 112px;
+    }
+}
