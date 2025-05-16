@@ -193,7 +193,7 @@ class DeviceManager {
                     <div class="group-content">
                         <div class="device-item">
                             <div class="device-info">
-                                <span class="device-name">显卡</span>
+                                <span class="device-name">选择推理显卡</span>
                                 <select class="device-combo-box"></select>
                             </div>
                         </div>

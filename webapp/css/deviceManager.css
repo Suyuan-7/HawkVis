@@ -1,7 +1,7 @@
 .device-groups {
     padding: 20px;
-    max-width: 1200px;
-    margin: 0 auto;
+    max-width: 50%; /* 分组占屏幕的50% */
+    margin: 0 auto; /* 居中对齐 */
 }
 
 .device-group {
@@ -44,11 +44,12 @@
 .device-info {
     display: flex;
     align-items: center;
-    gap: 10px; /* 添加间距，使组合框与标题分开 */
+    gap: 10px; /* 标签和组合框之间的间距 */
 }
 
 .device-name {
     color: white;
+    white-space: nowrap; /* 防止文本换行 */
 }
 
 .device-combo-box {
@@ -57,7 +58,6 @@
     border-radius: 4px;
     padding: 5px 10px;
     color: white;
-    /* 设置宽度为 auto，使组合框宽度根据内容自适应 */
-    width: auto;
+    width: calc(100% - 10px); /* 组合框宽度根据分组宽度减去10px */
     min-width: 100px; /* 设置最小宽度，防止组合框过窄 */
 }

@@ -17,7 +17,7 @@ class DeviceManager {
                     <div class="group-content">
                         <div class="device-item">
                             <div class="device-info">
-                                <span class="device-name">显卡</span>
+                                <span class="device-name">选择推理显卡</span>
                                 <select class="device-combo-box"></select>
                             </div>
                         </div>
@@ -33,8 +33,8 @@ class DeviceManager {
         const comboBox = document.querySelector('.device-combo-box');
         // 调用函数填充组合框内容
         this.updateComboBox(comboBox, []);
-        // 设置组合框宽度自适应
-        this.makeComboBoxAdaptive(comboBox);
+        // 设置组合框宽度为父容器宽度减去 10px
+        this.setComboBoxWidth(comboBox);
     }
 
     updateComboBox(comboBox, items) {
@@ -47,26 +47,10 @@ class DeviceManager {
         });
     }
 
-    makeComboBoxAdaptive(comboBox) {
-        // 获取组合框中的选项
-        const options = comboBox.options;
-        let maxWidth = 0;
-
-        // 计算选项中的最大宽度
-        for (let i = 0; i < options.length; i++) {
-            const option = options[i];
-            const width = option.text.length * 8; // 简单估算宽度，根据实际需要调整
-            if (width > maxWidth) {
-                maxWidth = width;
-            }
-        }
-
-        // 设置组合框宽度为最大选项宽度
-        if (maxWidth > 0) {
-            comboBox.style.width = maxWidth + 'px';
-        } else {
-            // 如果没有选项，设置一个默认宽度
-            comboBox.style.width = '150px';
-        }
+    setComboBoxWidth(comboBox) {
+        // 获取父容器宽度
+        const parentWidth = comboBox.parentElement.offsetWidth;
+        // 设置组合框宽度为父容器宽度减去 10px
+        comboBox.style.width = `${parentWidth - 10}px`;
     }
 }

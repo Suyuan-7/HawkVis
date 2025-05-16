@@ -1,4 +1,5 @@
 @import url('deviceManager.css');
+
 :root {
     --accent-color: #6c63ff;
     --dark-bg: #0a0a14;
@@ -343,4 +344,34 @@ body {
     .model-image {
         height: 112px;
     }
+}
+
+/* WebSocket 错误消息框样式 */
+.ws-error-message-box {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: rgba(255, 255, 255, 0.9);
+    border-radius: 8px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+    padding: 20px;
+    z-index: 9999;
+    width: 80%;
+    max-width: 400px;
+}
+
+.ws-error-header {
+    margin: 0 0 15px 0;
+}
+
+.ws-error-header h3 {
+    margin: 0;
+    color: #ff5555;
+    font-size: 18px;
+}
+
+.ws-error-content {
+    margin: 0;
+    color: #333;
 }
