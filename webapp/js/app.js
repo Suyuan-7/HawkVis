@@ -25,6 +25,8 @@ class ModelLoader {
     }
 
     async renderModels() {
+        if(!this.isLoaded)
+            return this.isLoaded;
         return new Promise((resolve) => {
             // 模拟模型加载延迟
             setTimeout(() => {
@@ -139,6 +141,8 @@ class ModelLoader {
     }
 
     initSelectModelBtnHandler() {
+        if(!this.isLoaded)
+            return;
         this.selectModelBtn.addEventListener('click', () => {
             if (this.currentSelection) {
                 this.selectModel();

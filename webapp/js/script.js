@@ -11,7 +11,7 @@ function createWebSocketErrorStyles() {
     style.textContent = `
         .ws-error-message-box {
             position: fixed;
-            top: 50%;
+            top: 70%;
             left: 50%;
             transform: translate(-50%, -50%);
             background-color: #fff3cd; /* 橙色背景 */
@@ -58,7 +58,7 @@ function ljws() {
     if ("WebSocket" in window) {
         ws = new WebSocket(ID);
         ws.onerror = function() {
-            createWebSocketErrorMessageBox("WebSocket 连接出现错误!");
+            createWebSocketErrorMessageBox("连接服务端失败,请检查后端是否已经启动!");
         };
         ws.onopen = function() {
             //连接成功
@@ -91,7 +91,7 @@ function createWebSocketErrorMessageBox(message) {
     messageBox.className = 'ws-error-message-box';
     messageBox.innerHTML = `
         <div class="ws-error-header">
-            <div class="ws-error-icon">
+            <div class="ws-error-icon" style="transform: translateY(-20px);">
                 <svg t="1747410431734" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="6890" width="64" height="64">
                     <path d="M160.8 833c-37.8 0-63-36.9-44.1-66.6L468 176.6c18.9-32.6 69.3-32.6 88.2 0L906 766.4c18.9 29.8-6.3 66.6-44.1 66.6H160.8z" fill="#FECE31" p-id="6891"></path>
                     <path d="M475.1 672.1c-44.1 44.1 26.8 115 70.9 70.9 47.2-47.2-23.7-118.1-70.9-70.9zM460.9 557.1c0 64.6 100.8 64.6 100.8 0V355.4c0-66.2-100.8-66.2-100.8 0v201.7z" fill="#020202" p-id="6892"></path>
@@ -99,7 +99,7 @@ function createWebSocketErrorMessageBox(message) {
             </div>
         </div>
         <div class="ws-error-content">
-            <h2>WebSocket 错误消息</h2>
+            <h3>WebSocket 错误消息</h3>
             <p>${message}</p>
         </div>
     `;
