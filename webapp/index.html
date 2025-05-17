@@ -5,48 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AI 模型控制台</title>
     <link rel="stylesheet" href="css/main.css">
-    <style>
-        /* WebSocket 错误消息框样式 */
-        .ws-error-message-box {
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background-color: #fff3cd; /* 橙色背景 */
-            border-radius: 8px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
-            padding: 20px;
-            z-index: 9999;
-            width: 80%;
-            max-width: 400px;
-            text-align: center;
-        }
-
-        .ws-error-header {
-            margin: 0 0 15px 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .ws-error-header h3 {
-            margin: 0;
-            color: #ff9500;
-            font-size: 18px;
-        }
-
-        .ws-error-icon {
-            width: 24px;
-            height: 24px;
-            margin-right: 10px;
-            color: #ff9500;
-        }
-
-        .ws-error-content {
-            margin: 0;
-            color: #333;
-        }
-    </style>
+    <link rel="stylesheet" href="css/deviceManager.css">
 </head>
 <body>
     <!-- 电路板背景画布 -->
@@ -89,6 +48,7 @@
                 class="model-select-button"
                 aria-label="选择模型"
                 aria-disabled="true"
+                onclick="selectModelHandler()"
             >
                 <img src="icons/SelectModel.svg" alt="选择模型" class="model-icon">
             </button>
@@ -119,89 +79,11 @@
     <!-- 提示框 -->
     <div id="toast" class="toast"></div>
 
+    <!-- WebSocket 日志显示区域 -->
+    <div id="cmd"></div>
+
     <script src="js/app.js"></script>
     <script src="js/deviceManager.js"></script>
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            // 尝试连接到 WebSocket 服务
-            const ws = new WebSocket('ws://localhost:48690');
-
-            // WebSocket 连接打开时的处理函数
-            ws.onopen = (event) => {
-                console.log('WebSocket连接已打开', event);
-                // 可以在这里执行连接成功后的操作
-            };
-
-            // WebSocket 连接关闭时的处理函数
-            ws.onclose = (event) => {
-                console.log('WebSocket连接已关闭', event);
-                createErrorMessageBox();
-            };
-
-            // WebSocket 连接错误时的处理函数
-            ws.onerror = (event) => {
-                console.error('WebSocket连接错误', event);
-                createErrorMessageBox();
-            };
-
-            // 创建错误消息框
-            function createErrorMessageBox() {
-                // 检查是否已经存在消息框
-                const existingBox = document.getElementById('ws-error-message-box');
-                if (existingBox) {
-                    return; // 如果消息框已存在，则不创建新的
-                }
-
-                // 创建消息框元素
-                const messageBox = document.createElement('div');
-                messageBox.id = 'ws-error-message-box';
-                messageBox.className = 'ws-error-message-box';
-                messageBox.innerHTML = `
-                    <div class="ws-error-header">
-                        <svg t="1747410431734" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="6890" width="64" height="64"><path d="M160.8 833c-37.8 0-63-36.9-44.1-66.6L468 176.6c18.9-32.6 69.3-32.6 88.2 0L906 766.4c18.9 29.8-6.3 66.6-44.1 66.6H160.8z" fill="#FECE31" p-id="6891"></path><path d="M475.1 672.1c-44.1 44.1 26.8 115 70.9 70.9 47.2-47.2-23.7-118.1-70.9-70.9zM460.9 557.1c0 64.6 100.8 64.6 100.8 0V355.4c0-66.2-100.8-66.2-100.8 0v201.7z" fill="#020202" p-id="6892"></path></svg>
-                    </div>
-                    <div class="ws-error-content">
-                        <h3>WebSocket服务未启动</h3>
-                        <p>请检查服务是否运行。</p>
-                    </div>
-                `;
-
-                // 将消息框添加到页面
-                document.body.appendChild(messageBox);
-            }
-        });
-    </script>
+    <script src="js/script.js"></script>
 </body>
 </html>
-
-<!-- index.html 保持原有结构不变，仅在最后添加以下script -->
-<script>
-document.addEventListener('DOMContentLoaded', () => {
-    // 保留原有DOM结构
-    const ws = new WebSocket('ws://localhost:48690');
-    let selectedModel = null;
-
-    // 模型选择逻辑（保持原有交互）
-    document.querySelectorAll('[data-model-id]').forEach(item => {
-        item.addEventListener('click', () => {
-            selectedModel = item.dataset.modelId;
-            document.getElementById('select-model-btn').disabled = false;
-        });
-    });
-
-    // 按钮点击事件（新增核心逻辑）
-    document.getElementById('select-model-btn').addEventListener('click', () => {
-        if (ws.readyState === WebSocket.OPEN && selectedModel) {
-            ws.send(`modName:${selectedModel}`);
-            // 保留原有提示样式
-            document.getElementById('toast').textContent = `已发送: ${selectedModel}`;
-        } else {
-            console.error('连接未就绪或未选择模型');
-        }
-    });
-
-    // 保留原有WebSocket状态管理
-    ws.onopen = () => document.getElementById('ws-status').classList.add('connected');
-    ws.onclose = () => document.getElementById('ws-status').classList.remove('connected');
-});
-</script>

@@ -324,3 +324,4 @@ window.onbeforeunload = function(e) {
 };
 
 new NavigationController();
+const modelLoader = new ModelLoader();
