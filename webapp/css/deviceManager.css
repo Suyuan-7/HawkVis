@@ -53,11 +53,23 @@
 }
 
 .device-combo-box {
-    background-color: rgba(255, 255, 255, 0.1);
+    background-color: rgba(255, 255, 255, 0.1); /* 半透明背景色 */
     border: 1px solid rgba(255, 255, 255, 0.2);
     border-radius: 4px;
     padding: 5px 10px;
     color: white;
     width: calc(100% - 10px); /* 组合框宽度根据分组宽度减去10px */
     min-width: 100px; /* 设置最小宽度，防止组合框过窄 */
+    appearance: none; /* 去掉默认的下拉箭头 */
+    cursor: pointer; /* 鼠标悬停时显示箭头 */
+}
+
+.device-combo-box:focus {
+    outline: none; /* 去掉默认的蓝色边框 */
+    background-color: rgba(255, 255, 255, 0.2); /* 聚焦时的背景色 */
+}
+
+.device-combo-box option {
+    background-color: rgba(10, 10, 20, 0.9); /* 选项的背景色 */
+    color: white; /* 选项的文字颜色 */
 }

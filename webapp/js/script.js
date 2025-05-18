@@ -1,9 +1,15 @@
 document.addEventListener('DOMContentLoaded', () => {
+    // 页面加载完成后初始化设备管理器
+    deviceManager = new DeviceManager_Wrapper();
+    deviceManager.init();
+
     // 页面加载完成后立即连接 WebSocket
     ljws();
 });
 
 var isopen = false, ws;
+var deviceManager; // 全局设备管理器实例
+var gpuListGlobal = []; // 全局 GPU 列表变量
 
 function createWebSocketErrorStyles() {
     const style = document.createElement('style');
@@ -68,8 +74,12 @@ function ljws() {
             //接收信息
             const received_msg = evt.data;
             rizhi("服务器发送：","blue");
-			rizhi(received_msg,"blue");
+            rizhi(received_msg,"blue");
             isopen = true;
+            // 如果设备管理器已初始化，则处理 GPU 消息
+            if (deviceManager) {
+                handleGpuMessage(received_msg);
+            }
         };
         ws.onclose = function() {
             //连接断开
@@ -118,4 +128,28 @@ function selectModelHandler() {
     } else {
         this.showError('未选择模型!')
     }
+}
+
+// 处理 GPU 消息
+function handleGpuMessage(message) {
+    try {
+        if (message.includes('(device)') && message.includes('(:device)')) {
+            const start = message.indexOf('(device)') + '(device)'.length;
+            const end = message.indexOf('(:device)');
+            const gpuListStr = message.substring(start, end);
+            gpuListGlobal = gpuListStr.split(','); // 将解析出的 GPU 列表保存到全局变量
+            // 如果当前处于 Device 菜单，立即更新组合框
+            if (document.getElementById('device').style.display !== 'none') {
+                updateGpuComboBox(gpuListGlobal);
+            }
+        }
+    } catch (error) {
+        console.error('解析显卡列表失败:', error);
+    }
+}
+
+// 更新 GPU 组合框
+function updateGpuComboBox(gpuList) {
+    if (!deviceManager || !deviceManager.updateGpuComboBox) return;
+    deviceManager.updateGpuComboBox(gpuList);
 }

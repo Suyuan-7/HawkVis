@@ -1,6 +1,7 @@
-class DeviceManager {
+class DeviceManager_Wrapper {
     constructor() {
         this.deviceContainer = document.getElementById('device');
+        this.comboBox = null;
     }
 
     init() {
@@ -30,27 +31,36 @@ class DeviceManager {
     }
 
     renderComboBox() {
-        const comboBox = document.querySelector('.device-combo-box');
-        // 调用函数填充组合框内容
-        this.updateComboBox(comboBox, []);
-        // 设置组合框宽度为父容器宽度减去 10px
-        this.setComboBoxWidth(comboBox);
+        this.comboBox = document.querySelector('.device-combo-box');
+        this.updateComboBox([]);
+        this.setComboBoxWidth(this.comboBox);
     }
 
-    updateComboBox(comboBox, items) {
-        comboBox.innerHTML = '';
+    updateComboBox(items) {
+        if (!this.comboBox) return;
+        this.comboBox.innerHTML = '';
         items.forEach(item => {
             const option = document.createElement('option');
             option.value = item.value;
             option.textContent = item.text;
-            comboBox.appendChild(option);
+            this.comboBox.appendChild(option);
         });
     }
 
     setComboBoxWidth(comboBox) {
-        // 获取父容器宽度
+        if (!comboBox) return;
         const parentWidth = comboBox.parentElement.offsetWidth;
-        // 设置组合框宽度为父容器宽度减去 10px
         comboBox.style.width = `${parentWidth - 10}px`;
+    }
+
+    updateGpuComboBox(gpuList) {
+        if (!this.comboBox) return;
+
+        const gpuOptions = gpuList.map(gpu => ({
+            value: gpu,
+            text: gpu
+        }));
+
+        this.updateComboBox(gpuOptions);
     }
 }
